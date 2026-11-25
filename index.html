@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Astronaut Skills Certificate</title>
+<style>
+  :root{
+    --ink:#151515;
+    --body:#4c4c4c;
+    --muted:#7d7d7d;
+    --faint:#a3a3a3;
+    --line:#e9e9e9;
+    --tint:#fafafa;
+    --accent:#1e3f66;
+    --accent-tint:#f4f7fb;
+    --r:14px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:#fff;color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Helvetica,Arial,sans-serif;
+    font-size:15px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:#dfe8f4;color:var(--accent)}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 28px}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid #cfdcec}
+  a:hover{border-bottom-color:var(--accent)}
+
+  /* ---------- header ---------- */
+  .head{padding:96px 0 40px}
+  .eyebrow{
+    margin:0 0 26px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--faint);font-weight:500;
+  }
+  h1{
+    margin:0;font-size:clamp(34px,5.2vw,54px);line-height:1.04;
+    letter-spacing:-.035em;font-weight:600;
+  }
+  .lede{
+    margin:24px 0 0;max-width:54ch;font-size:15.5px;line-height:1.65;color:var(--body);
+  }
+
+  /* ---------- stat strip ---------- */
+  .stats{
+    display:grid;grid-template-columns:repeat(4,1fr);
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    margin-top:48px;
+  }
+  .stat{padding:22px 24px 20px}
+  .stat + .stat{border-left:1px solid var(--line)}
+  .stat:first-child{padding-left:0}
+  .stat .k{
+    display:block;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--faint);margin-bottom:8px;
+  }
+  .stat .v{font-size:26px;font-weight:600;letter-spacing:-.03em;line-height:1}
+  .stat .n{display:block;font-size:12px;color:var(--muted);margin-top:7px}
+
+  /* ---------- sections ---------- */
+  section{margin-top:76px}
+  .sec-head{
+    display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;
+    border-bottom:1px solid var(--line);padding-bottom:14px;
+  }
+  .num{font-size:10.5px;letter-spacing:.18em;color:var(--faint);font-weight:500}
+  h2{margin:0;font-size:19px;font-weight:600;letter-spacing:-.015em}
+  .hint{margin-left:auto;font-size:11.5px;color:var(--faint);letter-spacing:.01em}
+  .sub{margin:16px 0 0;max-width:62ch;font-size:14px;color:var(--muted);line-height:1.65}
+
+  .reqs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 0}
+  .req{
+    display:inline-flex;align-items:center;gap:7px;
+    font-size:11px;letter-spacing:.02em;color:var(--muted);
+    border:1px solid var(--line);border-radius:100px;padding:4px 11px;background:#fff;
+    transition:all .18s ease;
+  }
+  .req b{font-weight:600;color:#b4b4b4;font-variant-numeric:tabular-nums;transition:color .18s}
+  .req.met{color:var(--accent);border-color:#cddcec;background:var(--accent-tint)}
+  .req.met b{color:var(--accent)}
+
+  /* ---------- cards ---------- */
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:26px}
+  .grid.one{grid-template-columns:1fr}
+  .card{
+    border:1px solid var(--line);border-radius:var(--r);background:#fff;
+    padding:24px 22px 20px;transition:border-color .18s ease;
+  }
+  .card:hover{border-color:#dcdcdc}
+  .card-top{display:flex;align-items:baseline;gap:12px}
+  .card h3{margin:0;font-size:14.5px;font-weight:600;letter-spacing:-.005em}
+  .pill{
+    margin-left:auto;flex:none;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--faint);border:1px solid var(--line);border-radius:100px;padding:2px 9px;
+    font-variant-numeric:tabular-nums;white-space:nowrap;
+  }
+  .card h3 + p{margin:6px 0 0}
+  .card p.desc{margin:7px 0 0;font-size:13px;line-height:1.55;color:var(--muted)}
+
+  .label{
+    display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+    font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);
+    margin:20px 0 4px;
+  }
+  .label .t{color:#c2c2c2;letter-spacing:.06em;text-transform:none;font-size:10.5px}
+
+  /* ---------- selectable rows ---------- */
+  .row{
+    display:grid;grid-template-columns:104px minmax(0,1fr) auto;align-items:center;
+    gap:14px;padding:8px 10px;margin:0 -10px;border-radius:9px;position:relative;
+    cursor:pointer;transition:background .15s ease;
+  }
+  .row:hover{background:var(--tint)}
+  .row:focus-within{outline:2px solid #cfdcec;outline-offset:-2px}
+  .row input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+  .code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:10.5px;letter-spacing:.01em;color:#9c9c9c;line-height:1.3;
+  }
+  .name{font-size:13.5px;line-height:1.4;color:#2b2b2b}
+  .pt{
+    font-size:10.5px;font-variant-numeric:tabular-nums;color:#a5a5a5;
+    border:1px solid var(--line);border-radius:100px;min-width:24px;text-align:center;
+    padding:1px 7px;transition:all .15s ease;
+  }
+  .row:has(input:checked){background:var(--accent-tint)}
+  .row:has(input:checked) .code{color:#7d97b5}
+  .row:has(input:checked) .name{color:var(--accent);font-weight:500}
+  .row:has(input:checked) .pt{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  .note{
+    margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line);
+    font-size:11.5px;line-height:1.6;color:var(--faint);
+  }
+  .note b{color:var(--muted);font-weight:500}
+
+  /* ---------- rules ---------- */
+  .rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 40px;margin-top:24px}
+  .rule{display:grid;grid-template-columns:26px 1fr;gap:8px;padding:14px 0;border-top:1px solid var(--line)}
+  .rule .rn{font-size:10px;letter-spacing:.1em;color:#c4c4c4;padding-top:4px;font-variant-numeric:tabular-nums}
+  .rule h4{margin:0 0 3px;font-size:13px;font-weight:600}
+  .rule p{margin:0;font-size:12.5px;line-height:1.6;color:var(--muted)}
+
+  /* ---------- footer ---------- */
+  footer{margin-top:76px;padding:26px 0 0;border-top:1px solid var(--line)}
+  footer p{margin:0;font-size:11.5px;line-height:1.7;color:var(--faint);max-width:70ch}
+  .spacer{height:120px}
+
+  /* ---------- tally ---------- */
+  .tally{position:fixed;left:0;right:0;bottom:0;z-index:20;
+    background:rgba(255,255,255,.93);backdrop-filter:saturate(180%) blur(14px);
+    -webkit-backdrop-filter:saturate(180%) blur(14px);border-top:1px solid var(--line)}
+  .bar{height:2px;background:#f1f1f1}
+  .bar span{display:block;height:2px;width:0;background:var(--accent);transition:width .3s ease}
+  .tally-inner{max-width:1060px;margin:0 auto;padding:10px 28px;
+    display:flex;align-items:center;justify-content:space-between;gap:14px 24px;flex-wrap:wrap}
+  .metrics{display:flex;gap:24px;flex-wrap:wrap}
+  .metric{display:flex;align-items:baseline;gap:7px}
+  .mk{font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;color:#b0b0b0}
+  .mv{font-size:11.5px;font-variant-numeric:tabular-nums;color:#5e5e5e;transition:color .2s}
+  .metric.met .mv{color:var(--accent);font-weight:600}
+  .status{font-size:11.5px;color:#a8a8a8;letter-spacing:.01em}
+  .status.done{color:var(--accent);font-weight:500}
+  .tally-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .cert-btn{
+    font:inherit;font-size:11px;letter-spacing:.05em;color:var(--accent);
+    background:var(--accent-tint);border:1px solid #cddcec;border-radius:100px;
+    padding:5px 13px;cursor:pointer;transition:all .15s ease;white-space:nowrap;
+  }
+  .cert-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  /* ---------- certificate ---------- */
+  .cert-overlay{
+    position:fixed;inset:0;z-index:50;display:none;
+    padding:40px 20px;overflow-y:auto;
+    background:rgba(255,255,255,.9);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  }
+  .cert-overlay.open{display:flex;align-items:flex-start;justify-content:center;animation:certFade .28s ease}
+  @keyframes certFade{from{opacity:0}to{opacity:1}}
+  @keyframes certRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  body.cert-open{overflow:hidden}
+  .cert{
+    position:relative;width:100%;max-width:700px;margin:auto;background:#fff;
+    border:1px solid var(--line);padding:54px 56px 40px;
+    box-shadow:0 26px 64px -24px rgba(18,32,50,.18);
+    animation:certRise .34s cubic-bezier(.2,.7,.3,1);
+  }
+  .cert::before{content:"";position:absolute;inset:13px;border:1px solid #eff1f3;pointer-events:none}
+  .cert-close{
+    position:absolute;top:18px;right:18px;width:28px;height:28px;border-radius:50%;
+    border:1px solid var(--line);background:#fff;color:#a8a8a8;font-size:14px;line-height:1;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s ease;z-index:2;
+  }
+  .cert-close:hover{color:var(--ink);border-color:#d4d4d4}
+  .cert-eyebrow{margin:0 0 28px;text-align:center;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint)}
+  .cert-title{
+    margin:0;text-align:center;font-family:Georgia,"Times New Roman",serif;
+    font-size:30px;font-weight:400;letter-spacing:-.005em;line-height:1.2;
+  }
+  .cert-lead{margin:26px 0 4px;text-align:center;font-size:11.5px;letter-spacing:.05em;color:var(--muted)}
+  .cert-name{
+    display:block;width:100%;max-width:420px;margin:0 auto;padding:2px 4px 7px;
+    text-align:center;font-family:Georgia,"Times New Roman",serif;font-size:25px;
+    color:var(--ink);background:transparent;border:0;border-bottom:1px solid transparent;
+    outline:none;transition:border-color .18s ease;
+  }
+  .cert-name::placeholder{color:#d8d8d8}
+  .cert-name:hover{border-bottom-color:var(--line)}
+  .cert-name:focus{border-bottom-color:var(--accent)}
+  .cert-line{margin:22px auto 0;max-width:48ch;text-align:center;font-size:12.5px;line-height:1.7;color:var(--body)}
+  .cert-line strong{font-weight:600;color:var(--ink)}
+  .cert-cols{display:grid;grid-template-columns:1fr 1fr;gap:34px;margin-top:36px;padding-top:24px;border-top:1px solid var(--line)}
+  .cert-h{margin:0;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+  .cert-track{margin:5px 0 0;font-size:11px;color:var(--accent)}
+  .cert-list{list-style:none;margin:14px 0 0;padding:0}
+  .cert-list li{display:flex;gap:8px;font-size:11px;line-height:1.9;color:var(--body)}
+  .cert-list li span{flex:none;min-width:72px;padding-top:1px;font-family:ui-monospace,Menlo,monospace;font-size:9.5px;color:#b0b0b0}
+  .cert-foot{display:grid;grid-template-columns:1fr 1fr;gap:44px;margin-top:44px}
+  .sig{border-top:1px solid #dcdcdc;padding-top:7px;text-align:center;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+  .cert-overlay .cert-close,.cert-overlay input{-webkit-appearance:none}
+
+  @media (max-width:640px){
+    .cert{padding:38px 24px 30px}
+    .cert-title{font-size:24px}
+    .cert-name{font-size:21px}
+    .cert-cols,.cert-foot{grid-template-columns:1fr;gap:26px}
+    .cert-foot{gap:30px;margin-top:34px}
+  }
+
+  @media (max-width:820px){
+    .head{padding-top:64px}
+    .grid,.rules{grid-template-columns:1fr}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .stat{padding:18px 0}
+    .stat:nth-child(2){border-left:1px solid var(--line);padding-left:22px}
+    .stat:nth-child(3){border-left:0;padding-left:0;border-top:1px solid var(--line)}
+    .stat:nth-child(4){border-top:1px solid var(--line)}
+    .hint{display:none}
+    .status{display:none}
+  }
+  @media (max-width:520px){
+    .wrap{padding:0 20px}
+    .row{grid-template-columns:92px minmax(0,1fr) auto;gap:10px}
+    .tally-inner{padding:10px 20px}
+    .metrics{gap:16px}
+  }
+  @media print{
+    .tally{display:none}
+    .spacer{display:none}
+    .card:hover{border-color:var(--line)}
+    .cert-overlay{position:static;background:#fff;padding:0;backdrop-filter:none;-webkit-backdrop-filter:none}
+    .cert-overlay.open{display:block}
+    .cert{box-shadow:none;border:0;max-width:none;padding:24px;animation:none}
+    .cert-close,.cert-btn{display:none!important}
+    body.cert-open{overflow:visible}
+  }
+</style>
+</head>
+<body>
+
+<header class="head wrap">
+  <p class="eyebrow">Independent Study · Georgia Institute of Technology</p>
+  <h1>Astonaut Skills<br>Certificate</h1>
+  <p class="lede">
+    A two-part certificate: graduate coursework in the life and aerospace sciences, and hands-on
+    training that builds the human performance skills spaceflight demands. Thirty points, split
+    across both pillars. Click any course or activity to tally your progress.
+  </p>
+
+  <div class="stats">
+    <div class="stat"><span class="k">Total</span><span class="v">30</span><span class="n">points to qualify</span></div>
+    <div class="stat"><span class="k">Coursework</span><span class="v">18</span><span class="n">academic and technical</span></div>
+    <div class="stat"><span class="k">Training</span><span class="v">12</span><span class="n">workshops and experience</span></div>
+    <div class="stat"><span class="k">Coverage</span><span class="v">4</span><span class="n">training areas, all required</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ 01 ACADEMIC ============ -->
+  <section>
+    <div class="sec-head">
+      <span class="num">01</span>
+      <h2>Academic &amp; Technical Knowledge</h2>
+      <span class="hint">18 points</span>
+    </div>
+    <p class="sub">
+      Choose one track — Biology or Aerospace — and complete its required course. Build the rest of
+      the 18 points from track electives and the shared interdisciplinary modeling list. Course points
+      equal credit hours.
+    </p>
+
+    <div class="reqs" id="reqs">
+      <span class="req" data-req="core">Required core course</span>
+      <span class="req" data-req="el">Track electives <b id="elCount">0 / 2</b></span>
+      <span class="req" data-req="inter">Interdisciplinary <b id="interCount">0 / 2</b></span>
+    </div>
+
+    <div class="grid">
+
+      <!-- BIOLOGY -->
+      <div class="card">
+        <div class="card-top">
+          <h3>Biology Track</h3>
+          <span class="pill">life science</span>
+        </div>
+        <p class="desc">The human body under load, injury, and disuse — physiology, pathology, and motor control.</p>
+
+        <div class="label"><span>Required</span></div>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-track="bio" data-kind="core">
+          <span class="code">BMED 6042</span>
+          <span class="name">Systems Physiology</span>
+          <span class="pt">3</span>
+        </label>
+
+        <div class="label"><span>Electives</span><span class="t">at least 2</span></div>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-track="bio" data-kind="elective">
+          <span class="code">BIOS 4100</span>
+          <span class="name">Exercise Physiology</span>
+          <span class="pt">3</span>
+        </label>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-track="bio" data-kind="elective">
+          <span class="code">BIOS 4440</span>
+          <span class="name">Human Pathology</span>
+          <span class="pt">3</span>
+        </label>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-track="bio" data-kind="elective">
+          <span class="code">BIOS 4540</span>
+          <span class="name">Human Motor Control</span>
+          <span class="pt">3</span>
+        </label>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-track="bio" data-kind="elective">
+          <span class="code">BMED 6793</span>
+          <span class="name">Systems Pathophysiology</span>
+          <span class="pt">3</span>
+        </label>
+
+        <p class="note"><b>Path total:</b> core + five 3-point courses = 18.</p>
+      </div>
+
+      <!-- AEROSPACE -->
+      <div class="card">
+        <div class="card-top">
+          <h3>Aerospace Track</h3>
+          <span class="pill">engineering</span>
+        </div>
+        <p class="desc">The vehicle, the environment, and the human inside it — fluids, entry, control, and autonomy.</p>
+
+        <div class="label"><span>Required</span></div>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="academic" data-pts="1" data-track="aero" data-kind="core">
+          <span class="code">AE 8801</span>
+          <span class="name"> Bioastronautics Seminar</span>
+          <span class="pt">1</span>
+        </label>
+
+        <div class="label"><span>Electives</span><span class="t">at least 2</span></div>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-track="aero" data-kind="elective">
+          <span class="code">AE 8803-LGM</span>
+          <span class="name">Microgravity Fluid Mechanics</span>
+          <span class="pt">3</span>
+        </label>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-track="aero" data-kind="elective">
+          <span class="code">AE 6355</span>
+          <span class="name">Planetary Entry, Descent and Landing</span>
+          <span class="pt">3</span>
+        </label>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-track="aero" data-kind="elective">
+          <span class="code">AE 6372</span>
+          <span class="name">Aerospace Systems Engineering</span>
+          <span class="pt">3</span>
+        </label>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-track="aero" data-kind="elective">
+          <span class="code">AE 6551</span>
+          <span class="name">Cognitive Engineering</span>
+          <span class="pt">3</span>
+        </label>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-track="aero" data-kind="elective">
+          <span class="code">AE 6561</span>
+          <span class="name">Reliable Control Software for Aerospace and Embedded Applications</span>
+          <span class="pt">3</span>
+        </label>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-track="aero" data-kind="elective">
+          <span class="code">AE 4552 / 6552</span>
+          <span class="name">Introduction to Humans &amp; Autonomy</span>
+          <span class="pt">3</span>
+        </label>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-track="aero" data-kind="elective">
+          <span class="code">AE 6721</span>
+          <span class="name">Evaluation of Human Integrated Systems</span>
+          <span class="pt">3</span>
+        </label>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-track="aero" data-kind="elective">
+          <span class="code">AE 8803</span>
+          <span class="name">Spacecraft Attitude Determination and Control</span>
+          <span class="pt">3</span>
+        </label>
+
+        <p class="note"><b>Path total:</b> the 1-point seminar means six 3-point courses — 19 points, one clear of the 18.</p>
+      </div>
+    </div>
+
+    <!-- INTERDISCIPLINARY -->
+    <div class="grid one">
+      <div class="card">
+        <div class="card-top">
+          <h3>Interdisciplinary Modeling</h3>
+          <span class="pill">shared · at least 2</span>
+        </div>
+        <p class="desc">Available to either track and counted inside the 18 academic points. Modeling, simulation, and decision science applied to biological and crewed systems.</p>
+
+        <div class="label"><span>Electives</span><span class="t">pick at least 2</span></div>
+        <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px;margin-top:2px">
+          <div>
+            <label class="row">
+              <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-kind="inter">
+              <span class="code">CSE 6730</span>
+              <span class="name">Modeling and Simulation</span>
+              <span class="pt">3</span>
+            </label>
+            <label class="row">
+              <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-kind="inter">
+              <span class="code">CS 7492</span>
+              <span class="name">Simulation of Biological Systems</span>
+              <span class="pt">3</span>
+            </label>
+            <label class="row">
+              <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-kind="inter">
+              <span class="code">CS 7626</span>
+              <span class="name">Introduction to Behavioral Imaging</span>
+              <span class="pt">3</span>
+            </label>
+          </div>
+          <div>
+            <label class="row">
+              <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-kind="inter">
+              <span class="code">CS 7790</span>
+              <span class="name">Cognitive Modeling</span>
+              <span class="pt">3</span>
+            </label>
+            <label class="row">
+              <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-kind="inter">
+              <span class="code">EAS 6130</span>
+              <span class="name">Earth System Modeling</span>
+              <span class="pt">3</span>
+            </label>
+            <label class="row">
+              <input class="pick" type="checkbox" data-pillar="academic" data-pts="3" data-kind="inter">
+              <span class="code">INTA 6004</span>
+              <span class="name">Modeling, Forecasting, and Decision Making</span>
+              <span class="pt">3</span>
+            </label>
+          </div>
+        </div>
+
+        <p class="note">
+          <b>Note:</b> AE 8803 is a special-topics number used here for two different courses — each
+          section counts once, and neither replaces the required seminar.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 02 WORKSHOPS ============ -->
+  <section>
+    <div class="sec-head">
+      <span class="num">02</span>
+      <h2>Workshops &amp; Operational Training</h2>
+      <span class="hint">12 points</span>
+    </div>
+    <p class="sub">
+      Four areas, and at least one activity in each — a strong score in one area never covers a gap in
+      another. Points follow contact hours and certification level, so the longer commitments are worth more.
+    </p>
+
+    <div class="reqs" id="areaReqs">
+      <span class="req" data-area-chip="fit">Physical fitness</span>
+      <span class="req" data-area-chip="psy">Psychological</span>
+      <span class="req" data-area-chip="team">Teamwork</span>
+      <span class="req" data-area-chip="ops">Operational readiness</span>
+    </div>
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-top">
+          <h3>Physical Fitness &amp; Human Performance</h3>
+          <span class="pill">area 1</span>
+        </div>
+        <p class="desc">Conditioning, water confidence, medical competence, and composure under physical load.</p>
+        <div class="label"><span>Activities</span><span class="t">12 available</span></div>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="workshops" data-pts="2" data-area="fit">
+          <span class="code">Workshop</span>
+          <span class="name">Swimming classes</span>
+          <span class="pt">2</span>
+        </label>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="workshops" data-pts="4" data-area="fit">
+          <span class="code">Certification</span>
+          <span class="name">Scuba diving</span>
+          <span class="pt">4</span>
+        </label>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="workshops" data-pts="6" data-area="fit">
+          <span class="code">Certification</span>
+          <span class="name">EMT certification — Georgia Tech EMSAT</span>
+          <span class="pt">6</span>
+        </label>
+        <p class="note">
+          Scuba outweighs swimming: open-water certification means equipment discipline and
+          confined-space comfort, not just stroke technique. EMT is the longest commitment here —
+          a full course plus clinical hours.
+          <a href="https://sites.gatech.edu/emsat/becoming-an-emt/" target="_blank" rel="noopener">Becoming an EMT →</a>
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <h3>Psychological Resilience &amp; Mental Performance</h3>
+          <span class="pill">area 2</span>
+        </div>
+        <p class="desc">Handling stress, confinement, and the psychological load of long-duration missions.</p>
+        <div class="label"><span>Activities</span><span class="t">5 available</span></div>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="workshops" data-pts="2" data-area="psy">
+          <span class="code">Workshop</span>
+          <span class="name">Stress-management workshops</span>
+          <span class="pt">2</span>
+        </label>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="workshops" data-pts="3" data-area="psy">
+          <span class="code">Training</span>
+          <span class="name">Isolation training</span>
+          <span class="pt">3</span>
+        </label>
+        <p class="note">Isolation training is a supervised analog exercise — longer, and harder to arrange, so it is worth more than a single workshop.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <h3>Teamwork, Leadership &amp; Communication</h3>
+          <span class="pill">area 3</span>
+        </div>
+        <p class="desc">Small-crew operations, where communication is the actual safety system.</p>
+        <div class="label"><span>Activities</span><span class="t">4 available</span></div>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="workshops" data-pts="2" data-area="team">
+          <span class="code">Workshop</span>
+          <span class="name">Leadership workshops</span>
+          <span class="pt">2</span>
+        </label>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="workshops" data-pts="2" data-area="team">
+          <span class="code">Workshop</span>
+          <span class="name">Conflict resolution</span>
+          <span class="pt">2</span>
+        </label>
+        <p class="note">Both are short-format sessions, so both are worth 2. Taking the pair is the usual way to clear this area.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <h3>Spaceflight Experience &amp; Operational Readiness</h3>
+          <span class="pill">area 4</span>
+        </div>
+        <p class="desc">Analog studies and simulated flight — where procedures, workload, and contingency handling are actually exercised.</p>
+        <div class="label"><span>Activities</span><span class="t">7 available</span></div>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="workshops" data-pts="4" data-area="ops">
+          <span class="code">Field</span>
+          <span class="name">Southeast analog participation</span>
+          <span class="pt">4</span>
+        </label>
+        <label class="row">
+          <input class="pick" type="checkbox" data-pillar="workshops" data-pts="3" data-area="ops">
+          <span class="code">Simulator</span>
+          <span class="name">Flight simulator training</span>
+          <span class="pt">3</span>
+        </label>
+        <p class="note">Both stand in for flown experience: a regional analog study counts as mission participation, and simulator sessions cover procedure and workload.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 03 RULES ============ -->
+  <section>
+    <div class="sec-head">
+      <span class="num">03</span>
+      <h2>How points are awarded</h2>
+      <span class="hint">both pillars required</span>
+    </div>
+
+    <div class="rules">
+      <div class="rule">
+        <span class="rn">01</span>
+        <div>
+          <h4>Points equal credit hours</h4>
+          <p>A 3-credit course is 3 points; the 1-credit seminar is 1. Academic total is 18.</p>
+        </div>
+      </div>
+      <div class="rule">
+        <span class="rn">02</span>
+        <div>
+          <h4>One core, both tracks open</h4>
+          <p>Complete the core of either track. Courses from the other track still count as electives.</p>
+        </div>
+      </div>
+      <div class="rule">
+        <span class="rn">03</span>
+        <div>
+          <h4>Breadth inside the 18</h4>
+          <p>At least two track electives and at least two interdisciplinary courses, not just one narrow column.</p>
+        </div>
+      </div>
+      <div class="rule">
+        <span class="rn">04</span>
+        <div>
+          <h4>Workshops must span all four areas</h4>
+          <p>One activity per area at minimum. A strong showing in one area never covers an empty one.</p>
+        </div>
+      </div>
+      <div class="rule">
+        <span class="rn">05</span>
+        <div>
+          <h4>Each activity counts once</h4>
+          <p>Repeats, retakes, and duplicated special-topics sections add nothing to the total.</p>
+        </div>
+      </div>
+      <div class="rule">
+        <span class="rn">06</span>
+        <div>
+          <h4>No transferring between pillars</h4>
+          <p>Surplus workshop points cannot cover a coursework shortfall, and the reverse. Both must be met.</p>
+        </div>
+      </div>
+      <div class="rule">
+        <span class="rn">07</span>
+        <div>
+          <h4>Evidence required</h4>
+          <p>Certifications need a valid card, workshops documented attendance, courses a passing grade.</p>
+        </div>
+      </div>
+      <div class="rule">
+        <span class="rn">08</span>
+        <div>
+          <h4>Thirty points, no rounding</h4>
+          <p>18 academic + 12 training = 30. Partial points are not awarded or carried over.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      Course points follow catalog credit hours. Workshop points are weighted by contact hours and
+      certification level, and the 18 / 12 split between pillars is the proposal underlying this page —
+      adjust both freely without disturbing the layout.
+    </p>
+  </footer>
+
+  <div class="spacer"></div>
+</main>
+
+<!-- ============ TALLY ============ -->
+<div class="tally">
+  <div class="bar"><span id="barFill"></span></div>
+  <div class="tally-inner">
+    <div class="metrics">
+      <div class="metric" id="mAc"><span class="mk">Academic</span><span class="mv" id="acPts">0 / 18</span></div>
+      <div class="metric" id="mWs"><span class="mk">Training</span><span class="mv" id="wsPts">0 / 12</span></div>
+      <div class="metric" id="mAr"><span class="mk">Areas</span><span class="mv" id="arPts">0 / 4</span></div>
+      <div class="metric" id="mTo"><span class="mk">Total</span><span class="mv" id="toPts">0 / 30</span></div>
+    </div>
+    <div class="tally-right">
+      <div class="status" id="status">Select courses and activities to tally points</div>
+      <button class="cert-btn" id="certOpen" type="button" hidden>View certificate</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CERTIFICATE ============ -->
+<div class="cert-overlay" id="certOverlay" aria-hidden="true">
+  <div class="cert" role="dialog" aria-modal="true" aria-labelledby="certTitle">
+    <button class="cert-close" id="certClose" type="button" aria-label="Close certificate">&times;</button>
+
+    <p class="cert-eyebrow">Georgia Institute of Technology &middot; Independent Study</p>
+    <h2 class="cert-title" id="certTitle">Certificate of Completion</h2>
+
+    <p class="cert-lead">this certifies that</p>
+    <input class="cert-name" id="certName" type="text" placeholder="Recipient name" aria-label="Recipient name" spellcheck="false" autocomplete="off">
+
+    <p class="cert-line">
+      has completed the <strong>Astronaut Skills Certificate</strong> &mdash;
+      thirty points across graduate coursework and operational training, with all four
+      training areas represented.
+    </p>
+
+    <div class="cert-cols">
+      <div>
+        <p class="cert-h">Academic &amp; Technical &middot; 18 pts</p>
+        <p class="cert-track" id="certTrack"></p>
+        <ul class="cert-list" id="certAcademic"></ul>
+      </div>
+      <div>
+        <p class="cert-h">Workshops &amp; Training &middot; 12 pts</p>
+        <p class="cert-track">All four areas</p>
+        <ul class="cert-list" id="certTraining"></ul>
+      </div>
+    </div>
+
+    <div class="cert-foot">
+      <div class="sig">Program Director</div>
+      <div class="sig" id="certDate">Date issued</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var picks = Array.prototype.slice.call(document.querySelectorAll('.pick'));
+  var el = {
+    ac: document.getElementById('acPts'),
+    ws: document.getElementById('wsPts'),
+    ar: document.getElementById('arPts'),
+    to: document.getElementById('toPts'),
+    bar: document.getElementById('barFill'),
+    status: document.getElementById('status'),
+    elCount: document.getElementById('elCount'),
+    interCount: document.getElementById('interCount'),
+    mAc: document.getElementById('mAc'),
+    mWs: document.getElementById('mWs'),
+    mAr: document.getElementById('mAr'),
+    mTo: document.getElementById('mTo')
+  };
+  var AC_TARGET = 18, WS_TARGET = 12;
+  var wasComplete = false, lastTrack = '';
+
+  function setReq(key, met) {
+    var node = document.querySelector('[data-req="' + key + '"]');
+    if (node) node.classList.toggle('met', met);
+  }
+  function setArea(key, met) {
+    var node = document.querySelector('[data-area-chip="' + key + '"]');
+    if (node) node.classList.toggle('met', met);
+  }
+
+  function update() {
+    var ac = 0, ws = 0, inter = 0;
+    var areas = { fit: 0, psy: 0, team: 0, ops: 0 };
+    var tracks = { bio: { core: 0, el: 0 }, aero: { core: 0, el: 0 } };
+
+    picks.forEach(function (p) {
+      if (!p.checked) return;
+      var pts = parseInt(p.dataset.pts, 10) || 0;
+      if (p.dataset.pillar === 'academic') {
+        ac += pts;
+        if (p.dataset.kind === 'core') tracks[p.dataset.track].core = 1;
+        else if (p.dataset.kind === 'elective') tracks[p.dataset.track].el += 1;
+        else inter += 1;
+      } else {
+        ws += pts;
+        areas[p.dataset.area] += 1;
+      }
+    });
+
+    var areaCount = 0;
+    Object.keys(areas).forEach(function (k) {
+      if (areas[k] > 0) { areaCount += 1; setArea(k, true); } else setArea(k, false);
+    });
+
+    var bestTrack = Math.max(tracks.bio.el, tracks.aero.el);
+    var coreOk = tracks.bio.core === 1 || tracks.aero.core === 1;
+    var trackOk = (tracks.bio.core && tracks.bio.el >= 2) || (tracks.aero.core && tracks.aero.el >= 2);
+
+    setReq('core', coreOk);
+    setReq('el', trackOk);
+    setReq('inter', inter >= 2);
+    el.elCount.textContent = Math.min(bestTrack, 2) + ' / 2';
+    el.interCount.textContent = Math.min(inter, 2) + ' / 2';
+
+    var acCapped = Math.min(ac, AC_TARGET);
+    var wsCapped = Math.min(ws, WS_TARGET);
+    var total = acCapped + wsCapped;
+
+    el.ac.textContent = ac + ' / ' + AC_TARGET;
+    el.ws.textContent = ws + ' / ' + WS_TARGET;
+    el.ar.textContent = areaCount + ' / 4';
+    el.to.textContent = total + ' / 30';
+
+    el.mAc.classList.toggle('met', ac >= AC_TARGET);
+    el.mWs.classList.toggle('met', ws >= WS_TARGET);
+    el.mAr.classList.toggle('met', areaCount === 4);
+    el.mTo.classList.toggle('met', ac >= AC_TARGET && ws >= WS_TARGET && areaCount === 4);
+
+    el.bar.style.width = Math.round((total / 30) * 100) + '%';
+
+    var complete = ac >= AC_TARGET && ws >= WS_TARGET && areaCount === 4;
+    el.status.classList.toggle('done', complete);
+
+    if (complete) {
+      el.status.textContent = 'All requirements met — certificate complete';
+    } else {
+      var missing = [];
+      if (ac < AC_TARGET) missing.push((AC_TARGET - ac) + ' academic');
+      if (ws < WS_TARGET) missing.push((WS_TARGET - ws) + ' training');
+      if (areaCount < 4) missing.push((4 - areaCount) + (4 - areaCount === 1 ? ' area' : ' areas'));
+      el.status.textContent = total === 0
+        ? 'Select courses and activities to tally points'
+        : 'Remaining: ' + missing.join(' · ');
+    }
+
+    lastTrack = tracks.bio.core && tracks.aero.core
+      ? 'Biology & Aerospace Tracks'
+      : tracks.bio.core ? 'Biology Track'
+      : tracks.aero.core ? 'Aerospace Track' : '';
+
+    certOpenBtn.hidden = !complete;
+    if (complete && !wasComplete) openCert();
+    wasComplete = complete;
+  }
+
+  /* ---------- certificate ---------- */
+  var overlay = document.getElementById('certOverlay');
+  var certOpenBtn = document.getElementById('certOpen');
+  var certCloseBtn = document.getElementById('certClose');
+  var certNameEl = document.getElementById('certName');
+  var certAcademicEl = document.getElementById('certAcademic');
+  var certTrainingEl = document.getElementById('certTraining');
+  var certTrackEl = document.getElementById('certTrack');
+  var certDateEl = document.getElementById('certDate');
+
+  function openCert() {
+    var courses = [], training = [];
+    picks.forEach(function (p) {
+      if (!p.checked) return;
+      var label = p.closest('.row');
+      var row = [
+        label.querySelector('.code').textContent,
+        label.querySelector('.name').textContent
+      ];
+      if (p.dataset.pillar === 'academic') courses.push(row);
+      else training.push(row);
+    });
+
+    certAcademicEl.innerHTML = courses.map(function (c) {
+      return '<li><span>' + c[0] + '</span>' + c[1] + '</li>';
+    }).join('');
+    certTrainingEl.innerHTML = training.map(function (t) {
+      return '<li><span>' + t[0] + '</span>' + t[1] + '</li>';
+    }).join('');
+    certTrackEl.textContent = lastTrack || 'Independent study';
+    certDateEl.textContent = new Date().toLocaleDateString('en-US', {
+      month: 'long', day: 'numeric', year: 'numeric'
+    });
+
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('cert-open');
+  }
+
+  function closeCert() {
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('cert-open');
+  }
+
+  certOpenBtn.addEventListener('click', openCert);
+  certCloseBtn.addEventListener('click', closeCert);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeCert(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeCert();
+  });
+
+  picks.forEach(function (p) { p.addEventListener('change', update); });
+  update();
+</script>
+</body>
+</html>
